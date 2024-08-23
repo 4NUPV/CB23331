@@ -1,0 +1,30 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+from sklearn.datasets import load_iris
+iris = load_iris()
+df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+df['species'] = iris.target_names[iris.target]
+total_records = df.shape[0]
+print(f"Total number of records: {total_records}")
+means = df[iris.feature_names].mean()
+std_devs = df[iris.feature_names].std()
+print("\nMean of each attribute:")
+print(means)
+print("\nStandard deviation of each attribute:")
+print(std_devs)
+plt.figure(figsize=(14, 10))
+for i, feature in enumerate(iris.feature_names, 1):
+    plt.subplot(2, 2, i)
+    sns.histplot(df[feature], kde=False, stat='density', bins=20, label='Histogram')
+    xmin, xmax = plt.xlim()
+    x = np.linspace(xmin, xmax, 100)
+    p = norm.pdf(x, df[feature].mean(), df[feature].std())
+    plt.plot(x, p, 'k', linewidth=2, label='Normal Distribution')
+    plt.title(f'{feature}')
+    plt.xlabel('Value')
+    plt.ylabel('Density')
+    plt.legend()
+plt.tight_layout()
+plt.show()
